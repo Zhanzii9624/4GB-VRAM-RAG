@@ -1,6 +1,6 @@
 # AORUS MASTER 16 AM6H — RAG 規格問答系統
 
-> 純手寫 RAG pipeline，在 4GB VRAM 限制下精準回答 [GIGABYTE AORUS MASTER 16 AM6H](https://www.gigabyte.com/tw/Laptop/AORUS-MASTER-16-AM6H/sp) 產品規格。
+> RAG pipeline，在 4GB VRAM 限制下精準回答 [GIGABYTE AORUS MASTER 16 AM6H](https://www.gigabyte.com/tw/Laptop/AORUS-MASTER-16-AM6H/sp) 產品規格。
 > 支援繁體中文與英文混合提問，具備 Streaming 輸出與拒答機制。
 
 ---
