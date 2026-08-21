@@ -1,0 +1,152 @@
+[
+  {
+    "id": "Q01",
+    "query": "這台筆電的處理器（CPU）型號是什麼？",
+    "lang": "zh",
+    "type": "single_spec",
+    "target_variant": "shared",
+    "expected_keywords": ["Core Ultra 9 275HX", "24C", "5.4GHz"],
+    "should_abstain": false,
+    "notes": "基本 CPU 查詢，shared spec"
+  },
+  {
+    "id": "Q02",
+    "query": "BZH 型號的顯示晶片（GPU）規格是什麼？",
+    "lang": "zh",
+    "type": "single_spec",
+    "target_variant": "BZH",
+    "expected_keywords": ["RTX 5090", "24GB", "GDDR7", "175W"],
+    "should_abstain": false,
+    "notes": "BZH variant GPU"
+  },
+  {
+    "id": "Q03",
+    "query": "What GPU does the BXH variant have?",
+    "lang": "en",
+    "type": "single_spec",
+    "target_variant": "BXH",
+    "expected_keywords": ["RTX 5070 Ti", "12GB", "GDDR7", "140W"],
+    "should_abstain": false,
+    "notes": "英文查詢 BXH GPU"
+  },
+  {
+    "id": "Q04",
+    "query": "記憶體最大可以裝多少？",
+    "lang": "zh",
+    "type": "single_spec",
+    "target_variant": "shared",
+    "expected_keywords": ["64GB", "DDR5"],
+    "should_abstain": false,
+    "notes": "記憶體上限查詢"
+  },
+  {
+    "id": "Q05",
+    "query": "What is the display resolution and refresh rate?",
+    "lang": "en",
+    "type": "single_spec",
+    "target_variant": "shared",
+    "expected_keywords": ["2560x1600", "240Hz", "QHD"],
+    "should_abstain": false,
+    "notes": "英文顯示器規格查詢"
+  },
+  {
+    "id": "Q06",
+    "query": "Wi-Fi 支援哪個版本？",
+    "lang": "zh",
+    "type": "single_spec",
+    "target_variant": "shared",
+    "expected_keywords": ["Wi-Fi 7", "802.11be", "BE1750"],
+    "should_abstain": false,
+    "notes": "Wi-Fi 版本查詢"
+  },
+  {
+    "id": "Q07",
+    "query": "BZH 跟 BXH 的顯示晶片差在哪裡？",
+    "lang": "zh",
+    "type": "cross_variant",
+    "target_variant": null,
+    "expected_keywords": ["RTX 5090", "RTX 5070 Ti", "24GB", "12GB"],
+    "should_abstain": false,
+    "notes": "跨 variant GPU 比較"
+  },
+  {
+    "id": "Q08",
+    "query": "Compare the GPU specs between BZH, BYH, and BXH variants.",
+    "lang": "en",
+    "type": "cross_variant",
+    "target_variant": null,
+    "expected_keywords": ["RTX 5090", "RTX 5080", "RTX 5070 Ti"],
+    "should_abstain": false,
+    "notes": "英文三 variant GPU 全比較"
+  },
+  {
+    "id": "Q09",
+    "query": "這台筆電有支援指紋辨識嗎？",
+    "lang": "zh",
+    "type": "abstain",
+    "target_variant": null,
+    "expected_keywords": ["沒有找到", "官方規格", "Windows Hello"],
+    "should_abstain": true,
+    "notes": "拒答測試：規格只有 Windows Hello Face，沒有指紋辨識"
+  },
+  {
+    "id": "Q10",
+    "query": "Does this laptop support Wi-Fi 8?",
+    "lang": "en",
+    "type": "abstain",
+    "target_variant": null,
+    "expected_keywords": ["not found", "no relevant", "Wi-Fi 7"],
+    "should_abstain": true,
+    "notes": "拒答測試：規格是 Wi-Fi 7，沒有 Wi-Fi 8"
+  },
+  {
+    "id": "Q11",
+    "query": "電池容量是多少？",
+    "lang": "zh",
+    "type": "single_spec",
+    "target_variant": "shared",
+    "expected_keywords": ["99.9Wh"],
+    "should_abstain": false,
+    "notes": "電池容量查詢"
+  },
+  {
+    "id": "Q12",
+    "query": "有幾個 USB Type-A 連接埠？",
+    "lang": "zh",
+    "type": "single_spec",
+    "target_variant": "shared",
+    "expected_keywords": ["3", "USB 3.2", "Type-A"],
+    "should_abstain": false,
+    "notes": "連接埠數量查詢"
+  },
+  {
+    "id": "Q13",
+    "query": "What is the weight of this laptop?",
+    "lang": "en",
+    "type": "single_spec",
+    "target_variant": "shared",
+    "expected_keywords": ["2.5 kg"],
+    "should_abstain": false,
+    "notes": "英文重量查詢"
+  },
+  {
+    "id": "Q14",
+    "query": "這台有 Thunderbolt 嗎？支援哪個版本？",
+    "lang": "zh",
+    "type": "single_spec",
+    "target_variant": "shared",
+    "expected_keywords": ["Thunderbolt 4", "USB-C"],
+    "should_abstain": false,
+    "notes": "Thunderbolt 版本查詢"
+  },
+  {
+    "id": "Q15",
+    "query": "BYH 的 GPU 功耗（TGP）是多少瓦？",
+    "lang": "zh",
+    "type": "single_spec",
+    "target_variant": "BYH",
+    "expected_keywords": ["175W", "RTX 5080"],
+    "should_abstain": false,
+    "notes": "BYH GPU TGP 查詢"
+  }
+]

@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+
+# uv / virtualenv
+.venv/
+venv/
+env/
+
+# Model files (never commit large GGUF files)
+*.gguf
+*.bin
+*.safetensors
+models/
+
+# Embeddings cache (regeneratable)
+data/embeddings/
+*.npy
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Data — raw HTML is large, keep processed specs.json
+# data/raw/   <-- uncomment to also ignore raw HTML
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Secrets
+.env
+*.key
