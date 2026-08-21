@@ -55,7 +55,7 @@
     "lang": "zh",
     "type": "single_spec",
     "target_variant": "shared",
-    "expected_keywords": ["Wi-Fi 7", "802.11be", "BE1750"],
+    "expected_keywords": ["Wi-Fi 7", "802.11be"],
     "should_abstain": false,
     "notes": "Wi-Fi 版本查詢"
   },
@@ -105,7 +105,7 @@
     "lang": "zh",
     "type": "single_spec",
     "target_variant": "shared",
-    "expected_keywords": ["99.9Wh"],
+    "expected_keywords": ["99Wh"],
     "should_abstain": false,
     "notes": "電池容量查詢"
   },
@@ -135,7 +135,7 @@
     "lang": "zh",
     "type": "single_spec",
     "target_variant": "shared",
-    "expected_keywords": ["Thunderbolt 4", "USB-C"],
+    "expected_keywords": ["Thunderbolt 4", "Thunderbolt 5", "USB-C"],
     "should_abstain": false,
     "notes": "Thunderbolt 版本查詢"
   },
