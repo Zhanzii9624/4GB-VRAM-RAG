@@ -10,7 +10,7 @@
 parser.py → chunker.py → embedding.py → hybrid_retriever.py → prompt.py → llama_engine.py
 ```
 
-規格資料手動維護（21 筆），不爬蟲。Embedding 跑 CPU（multilingual-e5-small），LLM 跑 GPU（Qwen2.5-3B Q4_K_M，llama-cpp-python）。無 LangChain、無 LlamaIndex。
+規格資料手動維護（21筆）。Embedding 使用 CPU（multilingual-e5-small），LLM 使用 GPU（Qwen2.5-3B Q4_K_M，llama-cpp-python）。無 LangChain 或 LlamaIndex。
 
 ---
 
@@ -89,35 +89,38 @@ keyword 用 jieba 斷詞（比純 bigram 對中文更準）。
 
 ---
 
-## 評測結果（12 題，Colab T4）
+## 評測結果（15 題，Colab T4）
 
 每題跑 3 次取平均。
 
 | 指標 | 平均 | 範圍 |
 |------|------|------|
-| Embed latency | 35.8 ms | 28–45 ms |
-| Retrieval latency | 34.9 ms | 27–43 ms |
-| Prefill (TTFT) | 248.7 ms | 194–388 ms |
-| TPS | 64.5 | 59–68 |
+| Embed latency | 37.9 ms | 26.6–48.7 ms |
+| Retrieval latency | 37.3 ms | 25.3–49.7 ms |
+| Prefill (TTFT) | 254.5 ms | 204.2–360.2 ms |
+| TPS | 63.5 | 57.7–67.7 |
 
 | ID | 問題 | 類型 | 結果 |
 |----|------|------|------|
-| q1 | BZH 顯示晶片規格 | 中文單查 | ✅ |
-| q2 | BZH GPU (英文) | 英文單查 | ✅ |
-| q3 | BZH VRAM capacity | 中英混合 | ✅ |
-| q4 | 三型號最大功耗比較 | 跨型號 | ✅ BZH/BYH 175W, BXH 140W |
-| q5 | BYH vs BZH VRAM 差距 | 跨型號 | ✅ 16GB vs 24GB = 8GB |
+| q1 | BZH 顯示晶片規格 | 中文單查 | ✅ RTX 5090, 24GB GDDR7, 175W |
+| q2 | BZH GPU (英文) | 英文單查 | ✅ RTX 5090 Laptop GPU |
+| q3 | BZH VRAM capacity | 中英混合 | ✅ 24GB GDDR7 |
+| q4 | 三型號最大功耗比較 | 跨型號 | ✅ BZH 175W 最高（BXH 140W） |
+| q5 | BYH vs BZH VRAM 差距 | 跨型號 | ✅ 16GB vs 24GB，差 8GB |
 | q6 | 螢幕支援觸控？ | 拒答 | ✅ 正確拒答 |
 | q7 | 今天天氣？ | 拒答 | ✅ 正確拒答 |
 | q8 | 保固期限？ | 拒答 | ✅ 正確拒答 |
 | q9 | 175W 對應哪些型號 | 精確數字 | ✅ BZH 和 BYH |
-| q10 | RAM 最大容量（英文） | 英文單查 | ✅ 64GB DDR5 |
+| q10 | RAM 最大容量（英文） | 英文單查 | ✅ 64GB DDR5 5600MHz |
 | q11 | 電池容量 | 中文單查 | ✅ 99Wh |
-| q12 | Keyboard 有 RGB？ | 中英混合 | ✅ 3-zone RGB |
+| q12 | Keyboard 有 RGB？ | 中英混合 | ✅ 3-zone RGB Backlit |
+| q13 | 連接埠右側規格 | 中英混合 | ✅ USB-A / TB4 / MicroSD / Audio |
+| q14 | BZH、BYH、BXH 差在哪 | 跨型號 | ✅ 正確列出三者 GPU 差異 |
+| q15 | BYH 是 RTX 5070 Ti + 16GB？ | 事實驗證 | ✅ 更正為 RTX 5080 + 16GB |
 
-正確率 **12/12**，拒答 **3/3**。
+正確率 **15/15**，拒答 **3/3**。
 
-> q14「BZH、BYH、BXH 差在哪」在未修復版本中回答「三者之間沒有特別差異」，原因是 retriever 只拉到 shared chunks。已修復（見上方 Retrieval 設計）。
+q4/q5/q14 都是跨型號比較題，靠 `_pinned_variant_chunks` 把三個 GPU chunk 釘入 context 才答對。舊版（純 semantic）q14 回答「三者之間沒有特別差異」。
 
 ---
 
@@ -125,7 +128,7 @@ keyword 用 jieba 斷詞（比純 bigram 對中文更準）。
 
 - `alpha=0.6` 沒有系統性調參，是人工估的
 - 資料只有這一個產品頁，21 筆規格
-- `max_new_tokens=200` 在長答案可能截斷（三型號完整比較）
+- `max_new_tokens=200` 在長答案可能截斷（q15 顯示器規格被截）
 - Colab llama-cpp-python CUDA 版首次編譯要 3–5 分鐘
 
 ---
@@ -146,7 +149,8 @@ evaluation/
   benchmark.py
 scripts/
   colab.ipynb          # Colab 一鍵執行
-  eval_benchmark.py    # 12 題快速 eval
+  eval_benchmark.py    # 15 題快速 eval
 ```
 
 *2026-08-22*
+

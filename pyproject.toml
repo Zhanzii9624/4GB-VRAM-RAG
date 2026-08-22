@@ -13,6 +13,7 @@ dependencies = [
     "huggingface-hub>=0.23",
     "llama-cpp-python",
     "gdown",
+    "jieba>=0.42",
 ]
 
 [project.optional-dependencies]
