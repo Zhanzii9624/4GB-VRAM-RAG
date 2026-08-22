@@ -118,5 +118,68 @@ def main():
     print(f"\n結果已存到 {out_path}")
 
 
+def ablation():
+    """
+    Retrieval-only ablation：不跑LLM，只比較三種alpha設定下
+    hybrid retriever 的 chunk 命中率。
+    命中定義：retrieved chunks 中至少一筆包含 expected_keywords 的所有關鍵字。
+    使用 evaluation/qa_testset.json（有 expected_keywords 欄位）。
+    """
+    import sys
+    qa_path = Path(__file__).parent.parent / "evaluation" / "qa_testset.json"
+    if not qa_path.exists():
+        print(f"[ablation] 找不到 {qa_path}，請確認路徑")
+        sys.exit(1)
+
+    qa_set = json.loads(qa_path.read_text(encoding="utf-8"))
+    # 只測有 expected_keywords、且不是拒答題的 case
+    qa_set = [q for q in qa_set if q.get("expected_keywords") and not q.get("should_abstain", False)]
+
+    chunks = load_chunks()
+    embedder = Embedder(device="cpu")
+    embeddings = embedder.load_embeddings()
+
+    def hit(retrieved_texts: list[str], keywords: list[str]) -> bool:
+        """至少一個 chunk 包含所有 expected_keywords（大小寫不分）。"""
+        for text in retrieved_texts:
+            t = text.lower()
+            if all(kw.lower() in t for kw in keywords):
+                return True
+        return False
+
+    configs = [
+        (1.0, "vector-only"),
+        (0.0, "keyword-only"),
+        (0.6, "hybrid (α=0.6)"),
+    ]
+
+    print("\n=== Retrieval Ablation ===")
+    print(f"測試集：{len(qa_set)} 題（排除拒答題）\n")
+
+    for alpha, label in configs:
+        retriever = build_hybrid_retriever(chunks, embeddings, embedder, alpha=alpha)
+        hits = 0
+        misses = []
+        for q in qa_set:
+            texts = [
+                r["chunk"]["text"] if isinstance(r["chunk"], dict) else str(r["chunk"])
+                for r in retriever.search(q["query"], top_k=TOP_K)
+            ]
+            if hit(texts, q["expected_keywords"]):
+                hits += 1
+            else:
+                misses.append(q["id"])
+
+        acc = hits / len(qa_set) * 100
+        miss_str = f"  miss: {misses}" if misses else ""
+        print(f"[{label:20s}]  {hits}/{len(qa_set)} ({acc:.0f}%){miss_str}")
+
+    print()
+
+
 if __name__ == "__main__":
-    main()
+    import sys
+    if "--ablation" in sys.argv:
+        ablation()
+    else:
+        main()
