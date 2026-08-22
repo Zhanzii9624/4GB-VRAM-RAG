@@ -1,3 +1,0 @@
-# data/raw/ — 存放原始 HTML 備份
-# 此目錄不進 git（內容由 parser.py 自動產生）
-# 若要離線解析，請手動存 product.html 於此目錄

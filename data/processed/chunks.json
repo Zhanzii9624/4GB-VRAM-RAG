@@ -1,0 +1,275 @@
+[
+  {
+    "text": "[類別: 作業系統] [Variant: 全部型號 (BZH / BYH / BXH)]\n作業系統 (Operating System): Windows 11 Pro / Windows 11 Home / UEFI Shell OS\n本規格適用於全部型號 (BZH / BYH / BXH)。",
+    "metadata": {
+      "variant": "shared",
+      "category": "作業系統",
+      "key": "作業系統",
+      "key_en": "Operating System",
+      "value": "Windows 11 Pro / Windows 11 Home / UEFI Shell OS",
+      "note": null,
+      "source_url": "https://www.gigabyte.com/tw/Laptop/AORUS-MASTER-16-AM6H/sp",
+      "product_family": "AORUS MASTER 16 AM6H"
+    }
+  },
+  {
+    "text": "[類別: 處理器] [Variant: 全部型號 (BZH / BYH / BXH)]\n處理器 (CPU / Processor): Intel Core Ultra 9 Processor 275HX (36MB cache, up to 5.4GHz, 24 cores, 24 threads)\n本規格適用於全部型號 (BZH / BYH / BXH)。",
+    "metadata": {
+      "variant": "shared",
+      "category": "處理器",
+      "key": "處理器",
+      "key_en": "CPU / Processor",
+      "value": "Intel Core Ultra 9 Processor 275HX (36MB cache, up to 5.4GHz, 24 cores, 24 threads)",
+      "note": null,
+      "source_url": "https://www.gigabyte.com/tw/Laptop/AORUS-MASTER-16-AM6H/sp",
+      "product_family": "AORUS MASTER 16 AM6H"
+    }
+  },
+  {
+    "text": "[類別: 顯示器] [Variant: 全部型號 (BZH / BYH / BXH)]\n顯示器 (Display / Screen): 16-inch 16:10 OLED WQXGA (2560x1600), 240Hz, 1ms, DCI-P3 100%, 500nits peak, 1,000,000:1 contrast; NVIDIA G-SYNC; NVIDIA Advanced Optimus; VESA DisplayHDR True Black 500; VESA ClearMR 10000; Pantone Validated; TÜV Rheinland Low Blue Light; Dolby Vision\n本規格適用於全部型號 (BZH / BYH / BXH)。",
+    "metadata": {
+      "variant": "shared",
+      "category": "顯示器",
+      "key": "顯示器",
+      "key_en": "Display / Screen",
+      "value": "16-inch 16:10 OLED WQXGA (2560x1600), 240Hz, 1ms, DCI-P3 100%, 500nits peak, 1,000,000:1 contrast; NVIDIA G-SYNC; NVIDIA Advanced Optimus; VESA DisplayHDR True Black 500; VESA ClearMR 10000; Pantone Validated; TÜV Rheinland Low Blue Light; Dolby Vision",
+      "note": null,
+      "source_url": "https://www.gigabyte.com/tw/Laptop/AORUS-MASTER-16-AM6H/sp",
+      "product_family": "AORUS MASTER 16 AM6H"
+    }
+  },
+  {
+    "text": "[類別: 記憶體] [Variant: 全部型號 (BZH / BYH / BXH)]\n記憶體 (Memory / RAM): Up to 64GB DDR5 5600MHz (2 x SO-DIMM slots for expansion)\n本規格適用於全部型號 (BZH / BYH / BXH)。",
+    "metadata": {
+      "variant": "shared",
+      "category": "記憶體",
+      "key": "記憶體",
+      "key_en": "Memory / RAM",
+      "value": "Up to 64GB DDR5 5600MHz (2 x SO-DIMM slots for expansion)",
+      "note": null,
+      "source_url": "https://www.gigabyte.com/tw/Laptop/AORUS-MASTER-16-AM6H/sp",
+      "product_family": "AORUS MASTER 16 AM6H"
+    }
+  },
+  {
+    "text": "[類別: 儲存裝置] [Variant: 全部型號 (BZH / BYH / BXH)]\n儲存裝置 (Storage): 1x PCIe Gen5 M.2 slot + 1x PCIe Gen4x4 M.2 slot, up to 4TB PCIe NVMe M.2 SSD\n本規格適用於全部型號 (BZH / BYH / BXH)。\n備註: 儲存容量依國家地區出貨而異",
+    "metadata": {
+      "variant": "shared",
+      "category": "儲存裝置",
+      "key": "儲存裝置",
+      "key_en": "Storage",
+      "value": "1x PCIe Gen5 M.2 slot + 1x PCIe Gen4x4 M.2 slot, up to 4TB PCIe NVMe M.2 SSD",
+      "note": "儲存容量依國家地區出貨而異",
+      "source_url": "https://www.gigabyte.com/tw/Laptop/AORUS-MASTER-16-AM6H/sp",
+      "product_family": "AORUS MASTER 16 AM6H"
+    }
+  },
+  {
+    "text": "[類別: 鍵盤] [Variant: 全部型號 (BZH / BYH / BXH)]\n鍵盤 (Keyboard): 3-zone RGB Backlit Keyboard, up to 1.7mm key-travel (support N-Key rollover)\n本規格適用於全部型號 (BZH / BYH / BXH)。",
+    "metadata": {
+      "variant": "shared",
+      "category": "鍵盤",
+      "key": "鍵盤",
+      "key_en": "Keyboard",
+      "value": "3-zone RGB Backlit Keyboard, up to 1.7mm key-travel (support N-Key rollover)",
+      "note": null,
+      "source_url": "https://www.gigabyte.com/tw/Laptop/AORUS-MASTER-16-AM6H/sp",
+      "product_family": "AORUS MASTER 16 AM6H"
+    }
+  },
+  {
+    "text": "[類別: 連接埠] [Variant: 全部型號 (BZH / BYH / BXH)]\n連接埠 (Ports / I/O): Left: 1x DC-in, 1x RJ-45, 1x HDMI 2.1, 1x USB3.2 Gen2 Type-A, 1x Thunderbolt 5 Type-C (USB4, DisplayPort 2.1, Power Delivery 3.0). Right: 1x USB3.2 Gen2 Type-A, 1x Thunderbolt 4 Type-C (USB4, DisplayPort 1.4, Power Delivery 3.0), 1x MicroSD (UHS-II), 1x Audio Jack (mic/headphone combo)\n本規格適用於全部型號 (BZH / BYH / BXH)。",
+    "metadata": {
+      "variant": "shared",
+      "category": "連接埠",
+      "key": "連接埠",
+      "key_en": "Ports / I/O",
+      "value": "Left: 1x DC-in, 1x RJ-45, 1x HDMI 2.1, 1x USB3.2 Gen2 Type-A, 1x Thunderbolt 5 Type-C (USB4, DisplayPort 2.1, Power Delivery 3.0). Right: 1x USB3.2 Gen2 Type-A, 1x Thunderbolt 4 Type-C (USB4, DisplayPort 1.4, Power Delivery 3.0), 1x MicroSD (UHS-II), 1x Audio Jack (mic/headphone combo)",
+      "note": null,
+      "source_url": "https://www.gigabyte.com/tw/Laptop/AORUS-MASTER-16-AM6H/sp",
+      "product_family": "AORUS MASTER 16 AM6H"
+    }
+  },
+  {
+    "text": "[類別: 音效] [Variant: 全部型號 (BZH / BYH / BXH)]\n音效 (Audio / Sound): 4x 2W speakers, Microphone, Dolby Atmos, Smart Amp Technology\n本規格適用於全部型號 (BZH / BYH / BXH)。",
+    "metadata": {
+      "variant": "shared",
+      "category": "音效",
+      "key": "音效",
+      "key_en": "Audio / Sound",
+      "value": "4x 2W speakers, Microphone, Dolby Atmos, Smart Amp Technology",
+      "note": null,
+      "source_url": "https://www.gigabyte.com/tw/Laptop/AORUS-MASTER-16-AM6H/sp",
+      "product_family": "AORUS MASTER 16 AM6H"
+    }
+  },
+  {
+    "text": "[類別: 通訊] [Variant: 全部型號 (BZH / BYH / BXH)]\n有線網路 (LAN): LAN: 1G\n本規格適用於全部型號 (BZH / BYH / BXH)。",
+    "metadata": {
+      "variant": "shared",
+      "category": "通訊",
+      "key": "有線網路",
+      "key_en": "LAN",
+      "value": "LAN: 1G",
+      "note": null,
+      "source_url": "https://www.gigabyte.com/tw/Laptop/AORUS-MASTER-16-AM6H/sp",
+      "product_family": "AORUS MASTER 16 AM6H"
+    }
+  },
+  {
+    "text": "[類別: 通訊] [Variant: 全部型號 (BZH / BYH / BXH)]\n無線網路 (Wi-Fi / Wireless): WIFI 7 (802.11be 2x2)\n本規格適用於全部型號 (BZH / BYH / BXH)。",
+    "metadata": {
+      "variant": "shared",
+      "category": "通訊",
+      "key": "無線網路",
+      "key_en": "Wi-Fi / Wireless",
+      "value": "WIFI 7 (802.11be 2x2)",
+      "note": null,
+      "source_url": "https://www.gigabyte.com/tw/Laptop/AORUS-MASTER-16-AM6H/sp",
+      "product_family": "AORUS MASTER 16 AM6H"
+    }
+  },
+  {
+    "text": "[類別: 通訊] [Variant: 全部型號 (BZH / BYH / BXH)]\n藍牙 (Bluetooth): Bluetooth v5.4\n本規格適用於全部型號 (BZH / BYH / BXH)。",
+    "metadata": {
+      "variant": "shared",
+      "category": "通訊",
+      "key": "藍牙",
+      "key_en": "Bluetooth",
+      "value": "Bluetooth v5.4",
+      "note": null,
+      "source_url": "https://www.gigabyte.com/tw/Laptop/AORUS-MASTER-16-AM6H/sp",
+      "product_family": "AORUS MASTER 16 AM6H"
+    }
+  },
+  {
+    "text": "[類別: 視訊鏡頭] [Variant: 全部型號 (BZH / BYH / BXH)]\n視訊鏡頭 (Webcam / Camera): FHD (1080p) IR Webcam, built-in array microphone, supports Windows Hello Face Authentication\n本規格適用於全部型號 (BZH / BYH / BXH)。",
+    "metadata": {
+      "variant": "shared",
+      "category": "視訊鏡頭",
+      "key": "視訊鏡頭",
+      "key_en": "Webcam / Camera",
+      "value": "FHD (1080p) IR Webcam, built-in array microphone, supports Windows Hello Face Authentication",
+      "note": null,
+      "source_url": "https://www.gigabyte.com/tw/Laptop/AORUS-MASTER-16-AM6H/sp",
+      "product_family": "AORUS MASTER 16 AM6H"
+    }
+  },
+  {
+    "text": "[類別: 安全裝置] [Variant: 全部型號 (BZH / BYH / BXH)]\n安全性 (Security): Firmware-based TPM, supports Intel Platform Trust Technology (Intel PTT)\n本規格適用於全部型號 (BZH / BYH / BXH)。",
+    "metadata": {
+      "variant": "shared",
+      "category": "安全裝置",
+      "key": "安全性",
+      "key_en": "Security",
+      "value": "Firmware-based TPM, supports Intel Platform Trust Technology (Intel PTT)",
+      "note": null,
+      "source_url": "https://www.gigabyte.com/tw/Laptop/AORUS-MASTER-16-AM6H/sp",
+      "product_family": "AORUS MASTER 16 AM6H"
+    }
+  },
+  {
+    "text": "[類別: 電池] [Variant: 全部型號 (BZH / BYH / BXH)]\n電池 (Battery): Li-ion 99Wh\n本規格適用於全部型號 (BZH / BYH / BXH)。",
+    "metadata": {
+      "variant": "shared",
+      "category": "電池",
+      "key": "電池",
+      "key_en": "Battery",
+      "value": "Li-ion 99Wh",
+      "note": null,
+      "source_url": "https://www.gigabyte.com/tw/Laptop/AORUS-MASTER-16-AM6H/sp",
+      "product_family": "AORUS MASTER 16 AM6H"
+    }
+  },
+  {
+    "text": "[類別: 變壓器] [Variant: 全部型號 (BZH / BYH / BXH)]\n變壓器 (Power Adapter / AC Adapter): 330W AC Adapter\n本規格適用於全部型號 (BZH / BYH / BXH)。",
+    "metadata": {
+      "variant": "shared",
+      "category": "變壓器",
+      "key": "變壓器",
+      "key_en": "Power Adapter / AC Adapter",
+      "value": "330W AC Adapter",
+      "note": null,
+      "source_url": "https://www.gigabyte.com/tw/Laptop/AORUS-MASTER-16-AM6H/sp",
+      "product_family": "AORUS MASTER 16 AM6H"
+    }
+  },
+  {
+    "text": "[類別: 尺寸] [Variant: 全部型號 (BZH / BYH / BXH)]\n尺寸 (Dimensions / Size): 357 x 254 x 23~29.9 mm\n本規格適用於全部型號 (BZH / BYH / BXH)。\n備註: 實際尺寸依配置、製程與量測方式而異",
+    "metadata": {
+      "variant": "shared",
+      "category": "尺寸",
+      "key": "尺寸",
+      "key_en": "Dimensions / Size",
+      "value": "357 x 254 x 23~29.9 mm",
+      "note": "實際尺寸依配置、製程與量測方式而異",
+      "source_url": "https://www.gigabyte.com/tw/Laptop/AORUS-MASTER-16-AM6H/sp",
+      "product_family": "AORUS MASTER 16 AM6H"
+    }
+  },
+  {
+    "text": "[類別: 重量] [Variant: 全部型號 (BZH / BYH / BXH)]\n重量 (Weight): 約 2.5 kg\n本規格適用於全部型號 (BZH / BYH / BXH)。\n備註: 實際重量依配置、製程與量測方式而異",
+    "metadata": {
+      "variant": "shared",
+      "category": "重量",
+      "key": "重量",
+      "key_en": "Weight",
+      "value": "約 2.5 kg",
+      "note": "實際重量依配置、製程與量測方式而異",
+      "source_url": "https://www.gigabyte.com/tw/Laptop/AORUS-MASTER-16-AM6H/sp",
+      "product_family": "AORUS MASTER 16 AM6H"
+    }
+  },
+  {
+    "text": "[類別: 顏色] [Variant: 全部型號 (BZH / BYH / BXH)]\n顏色 (Color): Dark Tide\n本規格適用於全部型號 (BZH / BYH / BXH)。",
+    "metadata": {
+      "variant": "shared",
+      "category": "顏色",
+      "key": "顏色",
+      "key_en": "Color",
+      "value": "Dark Tide",
+      "note": null,
+      "source_url": "https://www.gigabyte.com/tw/Laptop/AORUS-MASTER-16-AM6H/sp",
+      "product_family": "AORUS MASTER 16 AM6H"
+    }
+  },
+  {
+    "text": "[類別: 顯示晶片] [Variant: BZH]\n顯示晶片 (GPU / Graphics): NVIDIA GeForce RTX 5090 Laptop GPU, 24GB GDDR7, 175W Maximum Graphics Power with Dynamic Boost\n產品型號 BZH 專屬規格。",
+    "metadata": {
+      "variant": "BZH",
+      "category": "顯示晶片",
+      "key": "顯示晶片",
+      "key_en": "GPU / Graphics",
+      "value": "NVIDIA GeForce RTX 5090 Laptop GPU, 24GB GDDR7, 175W Maximum Graphics Power with Dynamic Boost",
+      "note": null,
+      "source_url": "https://www.gigabyte.com/tw/Laptop/AORUS-MASTER-16-AM6H/sp",
+      "product_family": "AORUS MASTER 16 AM6H"
+    }
+  },
+  {
+    "text": "[類別: 顯示晶片] [Variant: BYH]\n顯示晶片 (GPU / Graphics): NVIDIA GeForce RTX 5080 Laptop GPU, 16GB GDDR7, 175W Maximum Graphics Power with Dynamic Boost\n產品型號 BYH 專屬規格。",
+    "metadata": {
+      "variant": "BYH",
+      "category": "顯示晶片",
+      "key": "顯示晶片",
+      "key_en": "GPU / Graphics",
+      "value": "NVIDIA GeForce RTX 5080 Laptop GPU, 16GB GDDR7, 175W Maximum Graphics Power with Dynamic Boost",
+      "note": null,
+      "source_url": "https://www.gigabyte.com/tw/Laptop/AORUS-MASTER-16-AM6H/sp",
+      "product_family": "AORUS MASTER 16 AM6H"
+    }
+  },
+  {
+    "text": "[類別: 顯示晶片] [Variant: BXH]\n顯示晶片 (GPU / Graphics): NVIDIA GeForce RTX 5070 Ti Laptop GPU, 12GB GDDR7, 140W Maximum Graphics Power with Dynamic Boost\n產品型號 BXH 專屬規格。",
+    "metadata": {
+      "variant": "BXH",
+      "category": "顯示晶片",
+      "key": "顯示晶片",
+      "key_en": "GPU / Graphics",
+      "value": "NVIDIA GeForce RTX 5070 Ti Laptop GPU, 12GB GDDR7, 140W Maximum Graphics Power with Dynamic Boost",
+      "note": null,
+      "source_url": "https://www.gigabyte.com/tw/Laptop/AORUS-MASTER-16-AM6H/sp",
+      "product_family": "AORUS MASTER 16 AM6H"
+    }
+  }
+]
