@@ -18,22 +18,39 @@ N_RUNS = 3
 TOP_K = 6  # 從 3 調成 6：21 筆資料量小，多帶一點 context 對跨 variant 比較很重要
 
 TEST_SET = [
-    {"id": "q1", "type": "中文-一般", "question": "BZH 的顯示晶片規格是什麼？"},
-    {"id": "q2", "type": "英文-一般", "question": "What is the GPU of the BZH variant?"},
-    {"id": "q3", "type": "中英混合", "question": "請問 BZH 這台 laptop 的 VRAM capacity 是多少？"},
-    {"id": "q4", "type": "跨variant比較", "question": "BZH、BYH、BXH 三個型號中，哪一個顯示晶片的最大功耗最高？"},
-    {"id": "q5", "type": "跨variant比較", "question": "BYH 的顯示晶片 VRAM 是多少？跟 BZH 差多少？"},
-    {"id": "q6", "type": "拒答測試", "question": "這台筆電螢幕支援觸控功能嗎？"},  # 規格表沒有觸控欄位
-    {"id": "q7", "type": "拒答測試-無關問題", "question": "今天天氣如何？"},
-    {"id": "q8", "type": "拒答測試", "question": "這台筆電的保固期限是幾年？"},  # 規格表沒有保固欄位
-    {"id": "q9", "type": "精確數字查詢", "question": "175W 對應的是哪些型號？"},  # 注意：BZH 和 BYH 都是 175W
-    {"id": "q10", "type": "一般查詢-英文", "question": "How much RAM (system memory) can this laptop support?"},
-    {"id": "q11", "type": "一般查詢-中文", "question": "電池容量是多少？"},
-    {"id": "q12", "type": "中英混合", "question": "這台 laptop 的 keyboard 有支援 RGB 嗎？"},
-    {"id": "q13", "type": "中英混合", "question": "連接埠 right side規格有什麼"},
-    {"id": "q14", "type": "中英混合", "question": "BZH、BYH、BXH差在哪? What's the difference?"},
-    {"id": "q15", "type": "中英混合", "question": "BYH有NVIDIA GeForce RTX 5070 Ti和GPU16GB對嗎? what else special?"},
+    # expected_keywords: 用於 ablation 的 retrieval 命中判斷（可跨 chunk）；拒答題留空
+    {"id": "q1",  "type": "中文-一般",        "question": "BZH 的顯示晶片規格是什麼？",
+     "expected_keywords": ["RTX 5090", "24GB", "GDDR7"]},
+    {"id": "q2",  "type": "英文-一般",        "question": "What is the GPU of the BZH variant?",
+     "expected_keywords": ["RTX 5090", "BZH"]},
+    {"id": "q3",  "type": "中英混合",         "question": "請問 BZH 這台 laptop 的 VRAM capacity 是多少？",
+     "expected_keywords": ["24GB", "GDDR7", "BZH"]},
+    {"id": "q4",  "type": "跨variant比較",    "question": "BZH、BYH、BXH 三個型號中，哪一個顯示晶片的最大功耗最高？",
+     "expected_keywords": ["175W", "BZH", "140W"]},   # 跨 chunk
+    {"id": "q5",  "type": "跨variant比較",    "question": "BYH 的顯示晶片 VRAM 是多少？跟 BZH 差多少？",
+     "expected_keywords": ["16GB", "BYH", "24GB", "BZH"]},  # 跨 chunk
+    {"id": "q6",  "type": "拒答測試",         "question": "這台筆電螢幕支援觸控功能嗎？",
+     "expected_keywords": []},  # 拒答題，ablation 跳過
+    {"id": "q7",  "type": "拒答測試-無關問題", "question": "今天天氣如何？",
+     "expected_keywords": []},
+    {"id": "q8",  "type": "拒答測試",         "question": "這台筆電的保固期限是幾年？",
+     "expected_keywords": []},
+    {"id": "q9",  "type": "精確數字查詢",     "question": "175W 對應的是哪些型號？",
+     "expected_keywords": ["175W", "BZH", "BYH"]},
+    {"id": "q10", "type": "一般查詢-英文",    "question": "How much RAM (system memory) can this laptop support?",
+     "expected_keywords": ["64GB", "DDR5"]},
+    {"id": "q11", "type": "一般查詢-中文",    "question": "電池容量是多少？",
+     "expected_keywords": ["99Wh"]},
+    {"id": "q12", "type": "中英混合",         "question": "這台 laptop 的 keyboard 有支援 RGB 嗎？",
+     "expected_keywords": ["RGB"]},
+    {"id": "q13", "type": "中英混合",         "question": "連接埠 right side規格有什麼",
+     "expected_keywords": ["USB3.2", "MicroSD", "Thunderbolt 4"]},
+    {"id": "q14", "type": "中英混合",         "question": "BZH、BYH、BXH差在哪? What's the difference?",
+     "expected_keywords": ["RTX 5090", "RTX 5080", "RTX 5070 Ti"]},  # 跨 chunk，比較 pin 的關鍵測試
+    {"id": "q15", "type": "中英混合",         "question": "BYH有NVIDIA GeForce RTX 5070 Ti和GPU16GB對嗎? what else special?",
+     "expected_keywords": ["RTX 5080", "BYH", "16GB"]},
 ]
+
 
 
 def timed(fn, *args, **kwargs):
@@ -122,30 +139,19 @@ def ablation():
     """
     Retrieval-only ablation：不跑LLM，只比較三種alpha設定下
     hybrid retriever 的 chunk 命中率。
-    命中定義：retrieved chunks 中至少一筆包含 expected_keywords 的所有關鍵字。
-    使用 evaluation/qa_testset.json（有 expected_keywords 欄位）。
+    直接使用 TEST_SET，expected_keywords 空的（拒答題）自動跳過。
+    命中定義：所有 expected_keywords 出現在 retrieved chunks 中（可跨 chunk）。
     """
-    import sys
-    qa_path = Path(__file__).parent.parent / "evaluation" / "qa_testset.json"
-    if not qa_path.exists():
-        print(f"[ablation] 找不到 {qa_path}，請確認路徑")
-        sys.exit(1)
-
-    qa_set = json.loads(qa_path.read_text(encoding="utf-8"))
-    # 只測有 expected_keywords、且不是拒答題的 case
-    qa_set = [q for q in qa_set if q.get("expected_keywords") and not q.get("should_abstain", False)]
+    qa_set = [q for q in TEST_SET if q.get("expected_keywords")]
 
     chunks = load_chunks()
     embedder = Embedder(device="cpu")
     embeddings = embedder.load_embeddings()
 
     def hit(retrieved_texts: list[str], keywords: list[str]) -> bool:
-        """至少一個 chunk 包含所有 expected_keywords（大小寫不分）。"""
-        for text in retrieved_texts:
-            t = text.lower()
-            if all(kw.lower() in t for kw in keywords):
-                return True
-        return False
+        """所有 expected_keywords 出現在 retrieved chunks 中（可跨 chunk，大小寫不分）。"""
+        all_text = " ".join(retrieved_texts).lower()
+        return all(kw.lower() in all_text for kw in keywords)
 
     configs = [
         (1.0, "vector-only"),
@@ -154,7 +160,7 @@ def ablation():
     ]
 
     print("\n=== Retrieval Ablation ===")
-    print(f"測試集：{len(qa_set)} 題（排除拒答題）\n")
+    print(f"測試集：{len(qa_set)} 題（排除 {len(TEST_SET) - len(qa_set)} 題拒答題）\n")
 
     for alpha, label in configs:
         retriever = build_hybrid_retriever(chunks, embeddings, embedder, alpha=alpha)
@@ -163,7 +169,7 @@ def ablation():
         for q in qa_set:
             texts = [
                 r["chunk"]["text"] if isinstance(r["chunk"], dict) else str(r["chunk"])
-                for r in retriever.search(q["query"], top_k=TOP_K)
+                for r in retriever.search(q["question"], top_k=TOP_K)
             ]
             if hit(texts, q["expected_keywords"]):
                 hits += 1

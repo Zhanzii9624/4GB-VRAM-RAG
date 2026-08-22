@@ -26,8 +26,8 @@ eval = [
     "tabulate>=0.9",
 ]
 
-[tool.uv]
-dev-dependencies = [
+[dependency-groups]
+dev = [
     "ipykernel>=6.29",
     "tabulate>=0.9",
 ]

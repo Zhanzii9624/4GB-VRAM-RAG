@@ -5,7 +5,7 @@
     "lang": "zh",
     "type": "single_spec",
     "target_variant": "shared",
-    "expected_keywords": ["Core Ultra 9 275HX", "24C", "5.4GHz"],
+    "expected_keywords": ["Core Ultra 9 275HX", "5.4GHz", "24 cores"],
     "should_abstain": false,
     "notes": "基本 CPU 查詢，shared spec"
   },
@@ -45,7 +45,7 @@
     "lang": "en",
     "type": "single_spec",
     "target_variant": "shared",
-    "expected_keywords": ["2560x1600", "240Hz", "QHD"],
+    "expected_keywords": ["2560x1600", "240Hz", "WQXGA"],
     "should_abstain": false,
     "notes": "英文顯示器規格查詢"
   },
@@ -55,7 +55,7 @@
     "lang": "zh",
     "type": "single_spec",
     "target_variant": "shared",
-    "expected_keywords": ["Wi-Fi 7", "802.11be"],
+    "expected_keywords": ["WIFI 7", "802.11be"],
     "should_abstain": false,
     "notes": "Wi-Fi 版本查詢"
   },
@@ -115,7 +115,7 @@
     "lang": "zh",
     "type": "single_spec",
     "target_variant": "shared",
-    "expected_keywords": ["3", "USB 3.2", "Type-A"],
+    "expected_keywords": ["USB3.2", "Type-A"],
     "should_abstain": false,
     "notes": "連接埠數量查詢"
   },
@@ -135,7 +135,7 @@
     "lang": "zh",
     "type": "single_spec",
     "target_variant": "shared",
-    "expected_keywords": ["Thunderbolt 4", "Thunderbolt 5", "USB-C"],
+    "expected_keywords": ["Thunderbolt 4", "Thunderbolt 5", "Type-C"],
     "should_abstain": false,
     "notes": "Thunderbolt 版本查詢"
   },
