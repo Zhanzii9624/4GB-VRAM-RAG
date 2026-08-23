@@ -2,6 +2,7 @@
 系統評測：
 1. 拆解量測 embedding 延遲 / retrieval 延遲 / LLM prefill 延遲 / TPS，每題跑 N 次取平均
 2. 定性測試集：中英混合、跨 variant 比較、拒答測試
+使用 scripts/qa_testset.json
 """
 import time
 import json
@@ -15,42 +16,23 @@ from rag.prompt import build_prompt
 from inference.llama_engine import LlamaEngine
 
 N_RUNS = 3
-TOP_K = 6  # 從 3 調成 6：21 筆資料量小，多帶一點 context 對跨 variant 比較很重要
+TOP_K = 6            # main()：完整 pipeline 生成回答用，21 筆資料量小，多帶一點 context 對跨 variant 比較很重要
+ABLATION_TOP_K = 3   # ablation()：只用於 alpha 比較，窗口收窄才能逼出三種策略的差異
 
-TEST_SET = [
-    # expected_keywords: 用於 ablation 的 retrieval 命中判斷（可跨 chunk）；拒答題留空
-    {"id": "q1",  "type": "中文-一般",        "question": "BZH 的顯示晶片規格是什麼？",
-     "expected_keywords": ["RTX 5090", "24GB", "GDDR7"]},
-    {"id": "q2",  "type": "英文-一般",        "question": "What is the GPU of the BZH variant?",
-     "expected_keywords": ["RTX 5090", "BZH"]},
-    {"id": "q3",  "type": "中英混合",         "question": "請問 BZH 這台 laptop 的 VRAM capacity 是多少？",
-     "expected_keywords": ["24GB", "GDDR7", "BZH"]},
-    {"id": "q4",  "type": "跨variant比較",    "question": "BZH、BYH、BXH 三個型號中，哪一個顯示晶片的最大功耗最高？",
-     "expected_keywords": ["175W", "BZH", "140W"]},   # 跨 chunk
-    {"id": "q5",  "type": "跨variant比較",    "question": "BYH 的顯示晶片 VRAM 是多少？跟 BZH 差多少？",
-     "expected_keywords": ["16GB", "BYH", "24GB", "BZH"]},  # 跨 chunk
-    {"id": "q6",  "type": "拒答測試",         "question": "這台筆電螢幕支援觸控功能嗎？",
-     "expected_keywords": []},  # 拒答題，ablation 跳過
-    {"id": "q7",  "type": "拒答測試-無關問題", "question": "今天天氣如何？",
-     "expected_keywords": []},
-    {"id": "q8",  "type": "拒答測試",         "question": "這台筆電的保固期限是幾年？",
-     "expected_keywords": []},
-    {"id": "q9",  "type": "精確數字查詢",     "question": "175W 對應的是哪些型號？",
-     "expected_keywords": ["175W", "BZH", "BYH"]},
-    {"id": "q10", "type": "一般查詢-英文",    "question": "How much RAM (system memory) can this laptop support?",
-     "expected_keywords": ["64GB", "DDR5"]},
-    {"id": "q11", "type": "一般查詢-中文",    "question": "電池容量是多少？",
-     "expected_keywords": ["99Wh"]},
-    {"id": "q12", "type": "中英混合",         "question": "這台 laptop 的 keyboard 有支援 RGB 嗎？",
-     "expected_keywords": ["RGB"]},
-    {"id": "q13", "type": "中英混合",         "question": "連接埠 right side規格有什麼",
-     "expected_keywords": ["USB3.2", "MicroSD", "Thunderbolt 4"]},
-    {"id": "q14", "type": "中英混合",         "question": "BZH、BYH、BXH差在哪? What's the difference?",
-     "expected_keywords": ["RTX 5090", "RTX 5080", "RTX 5070 Ti"]},  # 跨 chunk，比較 pin 的關鍵測試
-    {"id": "q15", "type": "中英混合",         "question": "BYH有NVIDIA GeForce RTX 5070 Ti和GPU16GB對嗎? what else special?",
-     "expected_keywords": ["RTX 5080", "BYH", "16GB"]},
-]
+QA_TESTSET_PATH = Path(__file__).parent / "qa_testset.json"
 
+# ablation 只比較「單一規格查詢」的 retrieval 排名。
+# cross_variant 會被 hybrid_retriever 的 pinning 機制強制覆蓋 alpha，abstain 沒有正確 chunk 可比對排名，
+# 兩者都不適合拿來測 alpha 有沒有效，所以排除，但仍會印出排除清單，不是靜默跳過。
+ABLATION_EXCLUDED_TYPES = {"cross_variant", "abstain"}
+
+
+def _load_testset() -> list[dict]:
+    return json.loads(QA_TESTSET_PATH.read_text(encoding="utf-8"))
+
+
+def _chunk_text(r) -> str:
+    return r["chunk"]["text"] if isinstance(r["chunk"], dict) else str(r["chunk"])
 
 
 def timed(fn, *args, **kwargs):
@@ -64,8 +46,7 @@ def run_single(question: str, embedder, retriever, engine):
     _, embed_ms = timed(embedder.model.encode, [question], normalize_embeddings=True)
 
     results, retrieval_ms = timed(retriever.search, question, TOP_K)
-    # 這裡確保 chunk_text 是字串
-    context_chunks = [r["chunk"]["text"] if isinstance(r["chunk"], dict) else str(r["chunk"]) for r in results]
+    context_chunks = [_chunk_text(r) for r in results]
 
     prompt = build_prompt(question, context_chunks)
 
@@ -90,7 +71,6 @@ def run_single(question: str, embedder, retriever, engine):
         "tps": tps,
         "n_tokens": n_tokens,
         "answer": "".join(answer_tokens),
-        # 存檔前轉成純字串列表，避免 JSON serializable 錯誤
         "retrieved": context_chunks,
     }
 
@@ -102,10 +82,11 @@ def main():
     retriever = build_hybrid_retriever(chunks, embeddings, embedder)
     engine = LlamaEngine(n_gpu_layers=-1, n_ctx=2048, verbose=False)
 
+    testset = _load_testset()
     all_results = []
-    for case in TEST_SET:
-        print(f"\n=== [{case['id']}] {case['type']}: {case['question']} ===")
-        runs = [run_single(case["question"], embedder, retriever, engine) for _ in range(N_RUNS)]
+    for case in testset:
+        print(f"\n=== [{case['id']}] {case['type']}: {case['query']} ===")
+        runs = [run_single(case["query"], embedder, retriever, engine) for _ in range(N_RUNS)]
 
         avg = {
             "embed_ms": statistics.mean(r["embed_ms"] for r in runs),
@@ -121,7 +102,7 @@ def main():
         all_results.append({
             "id": case["id"],
             "type": case["type"],
-            "question": case["question"],
+            "query": case["query"],
             "avg_embed_ms": avg["embed_ms"],
             "avg_retrieval_ms": avg["retrieval_ms"],
             "avg_prefill_ms": avg["prefill_ms"],
@@ -135,23 +116,33 @@ def main():
     print(f"\n結果已存到 {out_path}")
 
 
+def _first_hit_rank(retrieved_texts: list[str], keywords: list[str]) -> int | None:
+    """依序看 top-k retrieved chunks，回傳所有 keyword 第一次被累積覆蓋完的名次（1-indexed）。
+    沒有任何名次能覆蓋完全部 keyword 就回傳 None（miss）。"""
+    seen = ""
+    for i, text in enumerate(retrieved_texts, start=1):
+        seen += text.lower()
+        if all(kw.lower() in seen for kw in keywords):
+            return i
+    return None
+
+
 def ablation():
     """
-    Retrieval-only ablation：不跑LLM，只比較三種alpha設定下
-    hybrid retriever 的 chunk 命中率。
-    直接使用 TEST_SET，expected_keywords 空的（拒答題）自動跳過。
-    命中定義：所有 expected_keywords 出現在 retrieved chunks 中（可跨 chunk）。
+    Retrieval-only ablation：不跑 LLM，只比較三種 alpha 設定下 hybrid retriever 的排名品質。
+
+    - TOP_K 收窄到 ABLATION_TOP_K=3（21 筆資料用 top_k=6 太寬鬆，三種策略幾乎都能命中，測不出差異）
+    - 排除 cross_variant / abstain 題型（見 ABLATION_EXCLUDED_TYPES 說明），只測單一規格查詢
+    - 指標改成 rank（正確答案第一次被覆蓋完的名次），而不是「top-k 裡有沒有出現過」的二元 hit，
+      這樣才看得出 vector-only / keyword-only / hybrid 排序品質的真實差距
     """
-    qa_set = [q for q in TEST_SET if q.get("expected_keywords")]
+    testset = _load_testset()
+    graded = [q for q in testset if q["type"] not in ABLATION_EXCLUDED_TYPES]
+    excluded = [q for q in testset if q["type"] in ABLATION_EXCLUDED_TYPES]
 
     chunks = load_chunks()
     embedder = Embedder(device="cpu")
     embeddings = embedder.load_embeddings()
-
-    def hit(retrieved_texts: list[str], keywords: list[str]) -> bool:
-        """所有 expected_keywords 出現在 retrieved chunks 中（可跨 chunk，大小寫不分）。"""
-        all_text = " ".join(retrieved_texts).lower()
-        return all(kw.lower() in all_text for kw in keywords)
 
     configs = [
         (1.0, "vector-only"),
@@ -160,27 +151,47 @@ def ablation():
     ]
 
     print("\n=== Retrieval Ablation ===")
-    print(f"測試集：{len(qa_set)} 題（排除 {len(TEST_SET) - len(qa_set)} 題拒答題）\n")
+    print(f"TOP_K={ABLATION_TOP_K}　測試集：{len(graded)} 題單一規格查詢")
+    print(f"排除 {len(excluded)} 題（cross_variant/abstain，另外報告）："
+          f"{[q['id'] for q in excluded]}\n")
+
+    ablation_output = {
+        "top_k": ABLATION_TOP_K,
+        "excluded_ids": [q["id"] for q in excluded],
+        "excluded_reason": "cross_variant 會被 pinning 機制覆蓋 alpha；abstain 無正確 chunk 可比對排名",
+        "configs": {},
+    }
 
     for alpha, label in configs:
         retriever = build_hybrid_retriever(chunks, embeddings, embedder, alpha=alpha)
-        hits = 0
-        misses = []
-        for q in qa_set:
-            texts = [
-                r["chunk"]["text"] if isinstance(r["chunk"], dict) else str(r["chunk"])
-                for r in retriever.search(q["question"], top_k=TOP_K)
-            ]
-            if hit(texts, q["expected_keywords"]):
-                hits += 1
-            else:
-                misses.append(q["id"])
+        per_question = []
+        for q in graded:
+            texts = [_chunk_text(r) for r in retriever.search(q["query"], top_k=ABLATION_TOP_K)]
+            rank = _first_hit_rank(texts, q["expected_keywords"])
+            per_question.append({"id": q["id"], "rank": rank})
 
-        acc = hits / len(qa_set) * 100
-        miss_str = f"  miss: {misses}" if misses else ""
-        print(f"[{label:20s}]  {hits}/{len(qa_set)} ({acc:.0f}%){miss_str}")
+        ranks_hit = [pq["rank"] for pq in per_question if pq["rank"] is not None]
+        misses = [pq["id"] for pq in per_question if pq["rank"] is None]
+        hit_rate = len(ranks_hit) / len(graded) * 100
+        avg_rank = round(statistics.mean(ranks_hit), 3) if ranks_hit else None
 
-    print()
+        avg_rank_str = f"{avg_rank:.2f}" if avg_rank is not None else "N/A"
+        print(f"[{label:20s}] hit@{ABLATION_TOP_K}={len(ranks_hit)}/{len(graded)} "
+              f"({hit_rate:.0f}%)  avg_rank={avg_rank_str}")
+        if misses:
+            print(f"    miss: {misses}")
+
+        ablation_output["configs"][label] = {
+            "alpha": alpha,
+            "hit_rate": f"{len(ranks_hit)}/{len(graded)}",
+            "hit_rate_pct": round(hit_rate, 1),
+            "avg_rank": avg_rank,
+            "per_question": per_question,
+        }
+
+    out_path = Path("eval_results_ablation.json")
+    out_path.write_text(json.dumps(ablation_output, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"\n結果已存到 {out_path}")
 
 
 if __name__ == "__main__":

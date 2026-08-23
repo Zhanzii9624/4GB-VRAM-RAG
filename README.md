@@ -10,7 +10,9 @@
 parser.py → chunker.py → embedding.py → hybrid_retriever.py → prompt.py → llama_engine.py
 ```
 
-規格資料手動維護（21筆）。Embedding 使用 CPU（multilingual-e5-small），LLM 使用 GPU（Qwen2.5-3B Q4_K_M，llama-cpp-python）。無 LangChain 或 LlamaIndex。
+- 規格資料為手動維護（共有21筆）
+- Embedding 使用 CPU（multilingual-e5-small），LLM 使用 GPU（Qwen2.5-3B Q4_K_M，llama-cpp-python）
+- 無 LangChain 或 LlamaIndex
 
 ---
 
@@ -32,12 +34,13 @@ Colab 用 `scripts/colab.ipynb` 跑，已整合 Drive 掛載、llama-cpp-python 
 CMAKE_ARGS="-DGGML_CUDA=on" uv pip install llama-cpp-python --no-cache-dir
 ```
 
-### 建立索引（首次）
+### 首次需下載模型與建立索引
 
 ```bash
-uv run python rag/parser.py    # 輸出 specs.json
-uv run python rag/chunker.py   # 輸出 chunks.json
-uv run python rag/embedding.py # 輸出 chunk_embeddings.npy
+uv run python scripts/download_model.py # 從 Hugging Face 下載 Qwen2.5 GGUF 模型
+uv run python rag/parser.py             # 輸出 specs.json
+uv run python rag/chunker.py            # 輸出 chunks.json
+uv run python rag/embedding.py          # 輸出 chunk_embeddings.npy
 ```
 
 ### 問答
@@ -59,7 +62,7 @@ uv run python scripts/eval_benchmark.py
 
 ### Qwen2.5-3B-Instruct Q4_K_M
 
-選這個主要是繁中能力在 3B 量化裡算好的，且 Q4_K_M 在 4GB VRAM 內可塞進去。
+Qwen2.5-3B-Instruct繁中能力較好、且Q4_K_M可以在4GB VRAM內使用。
 
 | | |
 |---|---|
@@ -69,11 +72,11 @@ uv run python scripts/eval_benchmark.py
 | 實測 TPS（T4）| 59–68 tokens/s |
 | Prefill / TTFT（中位數）| ~250 ms |
 
-`n_ctx=2048` 足夠system prompt + 6 chunks + query 大約 600–900 tokens。
+`n_ctx=2048` 足夠system prompt + 6 chunks + query 約 600–900 tokens
 
 ### multilingual-e5-small
 
-跑 CPU，不占 VRAM。100+ 語言，384-dim，e5 系列需要加 `"query: "` / `"passage: "` prefix，不加的話 retrieval 準確率會掉。
+跑 CPU，不占 VRAM；100+ 語言，384-dim；e5 系列需要加 `"query: "` / `"passage: "` prefix，否則 retrieval 準確度會下降。
 
 ---
 
@@ -85,7 +88,9 @@ score = 0.6 × cosine + 0.4 × keyword_overlap
 
 keyword 用 jieba 斷詞（比純 bigram 對中文更準）。
 
-**跨型號比較查詢修復**：當 query 同時出現 2 個以上型號名稱（如「BZH、BYH、BXH 差在哪」），semantic score 天然偏向 shared chunks，會漏掉 GPU 差異。修法是偵測到比較查詢後，把所有 variant-specific chunks（非 shared）強制 pin 到 context 前排，再補其餘 top-k。
+**跨型號比較查詢修復**：
+- 當query同時出現 2 個以上型號名稱（如「BZH、BYH、BXH 差在哪」），semantic score 天然偏向 shared chunks，會漏掉 GPU 差異。
+- 解決方式：偵測到比較查詢後，把所有 variant-specific chunks（非 shared）強制 pin 到 context 前排，再補其餘 top-k。
 
 ---
 
@@ -120,37 +125,34 @@ keyword 用 jieba 斷詞（比純 bigram 對中文更準）。
 
 正確率 **15/15**，拒答 **3/3**。
 
-q4/q5/q14 都是跨型號比較題，靠 `_pinned_variant_chunks` 把三個 GPU chunk 釘入 context 才答對。舊版（純 semantic）q14 回答「三者之間沒有特別差異」。
+q4/q5/q14 為跨型號比較題，靠 `_pinned_variant_chunks` 把三個 GPU chunk 釘入 context 才答對。舊版（純 semantic）q14 回答「三者之間沒有特別差異」。
 
 ---
 
 ## 已知限制
 
 - `alpha=0.6` 沒有系統性調參，是人工估的
-- 資料只有這一個產品頁，21 筆規格
-- `max_new_tokens=200` 在長答案可能截斷（q15 顯示器規格被截）
-- Colab llama-cpp-python CUDA 版首次編譯要 3–5 分鐘
+- 資料只有這一個產品頁，21 筆規格、需要手動維護
+- `max_new_tokens=200` 在長答案可能截斷
 
 ---
 
 ## 目錄
 
 ```
+main.py                # CLI入口 (可單次提問、互動問答與 --ablation)
 rag/
-  parser.py            # 21 筆手動規格，輸出 specs.json
-  chunker.py
-  embedding.py         # multilingual-e5-small wrapper
-  hybrid_retriever.py  # vector + jieba keyword + comparison pin
-  prompt.py            # ChatML builder + 拒答 system prompt
+  parser.py            # 手動規格資料解析，輸出specs.json
+  chunker.py           # 將specs轉換為可檢索的chunk，輸出chunks.json
+  embedding.py         # multilingual-e5-small 向量處理與快取(.npy)
+  hybrid_retriever.py  # 向量 + jieba 關鍵字混合檢索與比較查詢釘選(pinning)
+  prompt.py            # ChatML 格式 Prompt 組裝與拒答機制系統提示
 inference/
-  llama_engine.py
-evaluation/
-  qa_testset.json      # 15 題標準測試集
-  benchmark.py
+  llama_engine.py      # llama-cpp-python 模型載入與 Streaming 推論引擎
 scripts/
-  colab.ipynb          # Colab 一鍵執行
-  eval_benchmark.py    # 15 題快速 eval
+  download_model.py    # 自動從 HF 下載 GGUF 模型檔至 models/
+  eval_benchmark.py    # 測試script，latency/TPS與ablation測試
+  qa_testset.json      # 15 題測試題，含單一規格、跨型號比較與拒答測試
+  colab.ipynb          # Colab執行與測試
 ```
-
-*2026-08-22*
 
