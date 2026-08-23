@@ -10,13 +10,13 @@
   "configs": {
     "vector-only": {
       "alpha": 1.0,
-      "hit_rate": "8/11",
-      "hit_rate_pct": 72.7,
+      "hit_rate": "9/11",
+      "hit_rate_pct": 81.8,
       "avg_rank": 1,
       "per_question": [
         {
           "id": "Q01",
-          "rank": null
+          "rank": 1
         },
         {
           "id": "Q02",
@@ -62,13 +62,13 @@
     },
     "keyword-only": {
       "alpha": 0.0,
-      "hit_rate": "10/11",
-      "hit_rate_pct": 90.9,
-      "avg_rank": 1.1,
+      "hit_rate": "11/11",
+      "hit_rate_pct": 100.0,
+      "avg_rank": 1.091,
       "per_question": [
         {
           "id": "Q01",
-          "rank": null
+          "rank": 1
         },
         {
           "id": "Q02",
@@ -114,13 +114,13 @@
     },
     "hybrid (α=0.6)": {
       "alpha": 0.6,
-      "hit_rate": "10/11",
-      "hit_rate_pct": 90.9,
+      "hit_rate": "11/11",
+      "hit_rate_pct": 100.0,
       "avg_rank": 1,
       "per_question": [
         {
           "id": "Q01",
-          "rank": null
+          "rank": 1
         },
         {
           "id": "Q02",
