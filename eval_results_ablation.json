@@ -1,0 +1,168 @@
+{
+  "top_k": 3,
+  "excluded_ids": [
+    "Q07",
+    "Q08",
+    "Q09",
+    "Q10"
+  ],
+  "excluded_reason": "cross_variant 會被 pinning 機制覆蓋 alpha；abstain 無正確 chunk 可比對排名",
+  "configs": {
+    "vector-only": {
+      "alpha": 1.0,
+      "hit_rate": "8/11",
+      "hit_rate_pct": 72.7,
+      "avg_rank": 1,
+      "per_question": [
+        {
+          "id": "Q01",
+          "rank": null
+        },
+        {
+          "id": "Q02",
+          "rank": 1
+        },
+        {
+          "id": "Q03",
+          "rank": 1
+        },
+        {
+          "id": "Q04",
+          "rank": 1
+        },
+        {
+          "id": "Q05",
+          "rank": null
+        },
+        {
+          "id": "Q06",
+          "rank": 1
+        },
+        {
+          "id": "Q11",
+          "rank": 1
+        },
+        {
+          "id": "Q12",
+          "rank": 1
+        },
+        {
+          "id": "Q13",
+          "rank": null
+        },
+        {
+          "id": "Q14",
+          "rank": 1
+        },
+        {
+          "id": "Q15",
+          "rank": 1
+        }
+      ]
+    },
+    "keyword-only": {
+      "alpha": 0.0,
+      "hit_rate": "10/11",
+      "hit_rate_pct": 90.9,
+      "avg_rank": 1.1,
+      "per_question": [
+        {
+          "id": "Q01",
+          "rank": null
+        },
+        {
+          "id": "Q02",
+          "rank": 1
+        },
+        {
+          "id": "Q03",
+          "rank": 1
+        },
+        {
+          "id": "Q04",
+          "rank": 1
+        },
+        {
+          "id": "Q05",
+          "rank": 1
+        },
+        {
+          "id": "Q06",
+          "rank": 1
+        },
+        {
+          "id": "Q11",
+          "rank": 2
+        },
+        {
+          "id": "Q12",
+          "rank": 1
+        },
+        {
+          "id": "Q13",
+          "rank": 1
+        },
+        {
+          "id": "Q14",
+          "rank": 1
+        },
+        {
+          "id": "Q15",
+          "rank": 1
+        }
+      ]
+    },
+    "hybrid (α=0.6)": {
+      "alpha": 0.6,
+      "hit_rate": "10/11",
+      "hit_rate_pct": 90.9,
+      "avg_rank": 1,
+      "per_question": [
+        {
+          "id": "Q01",
+          "rank": null
+        },
+        {
+          "id": "Q02",
+          "rank": 1
+        },
+        {
+          "id": "Q03",
+          "rank": 1
+        },
+        {
+          "id": "Q04",
+          "rank": 1
+        },
+        {
+          "id": "Q05",
+          "rank": 1
+        },
+        {
+          "id": "Q06",
+          "rank": 1
+        },
+        {
+          "id": "Q11",
+          "rank": 1
+        },
+        {
+          "id": "Q12",
+          "rank": 1
+        },
+        {
+          "id": "Q13",
+          "rank": 1
+        },
+        {
+          "id": "Q14",
+          "rank": 1
+        },
+        {
+          "id": "Q15",
+          "rank": 1
+        }
+      ]
+    }
+  }
+}

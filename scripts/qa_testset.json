@@ -5,7 +5,11 @@
     "lang": "zh",
     "type": "single_spec",
     "target_variant": "shared",
-    "expected_keywords": ["Core Ultra 9 275HX", "5.4GHz", "24 cores"],
+    "expected_keywords": [
+      "Core Ultra 9 Processor 275HX",
+      "5.4GHz",
+      "24 cores"
+    ],
     "should_abstain": false,
     "notes": "基本 CPU 查詢，shared spec"
   },
@@ -15,7 +19,12 @@
     "lang": "zh",
     "type": "single_spec",
     "target_variant": "BZH",
-    "expected_keywords": ["RTX 5090", "24GB", "GDDR7", "175W"],
+    "expected_keywords": [
+      "RTX 5090",
+      "24GB",
+      "GDDR7",
+      "175W"
+    ],
     "should_abstain": false,
     "notes": "BZH variant GPU"
   },
@@ -25,7 +34,12 @@
     "lang": "en",
     "type": "single_spec",
     "target_variant": "BXH",
-    "expected_keywords": ["RTX 5070 Ti", "12GB", "GDDR7", "140W"],
+    "expected_keywords": [
+      "RTX 5070 Ti",
+      "12GB",
+      "GDDR7",
+      "140W"
+    ],
     "should_abstain": false,
     "notes": "英文查詢 BXH GPU"
   },
@@ -35,7 +49,10 @@
     "lang": "zh",
     "type": "single_spec",
     "target_variant": "shared",
-    "expected_keywords": ["64GB", "DDR5"],
+    "expected_keywords": [
+      "64GB",
+      "DDR5"
+    ],
     "should_abstain": false,
     "notes": "記憶體上限查詢"
   },
@@ -45,7 +62,11 @@
     "lang": "en",
     "type": "single_spec",
     "target_variant": "shared",
-    "expected_keywords": ["2560x1600", "240Hz", "WQXGA"],
+    "expected_keywords": [
+      "2560x1600",
+      "240Hz",
+      "WQXGA"
+    ],
     "should_abstain": false,
     "notes": "英文顯示器規格查詢"
   },
@@ -55,7 +76,10 @@
     "lang": "zh",
     "type": "single_spec",
     "target_variant": "shared",
-    "expected_keywords": ["WIFI 7", "802.11be"],
+    "expected_keywords": [
+      "WIFI 7",
+      "802.11be"
+    ],
     "should_abstain": false,
     "notes": "Wi-Fi 版本查詢"
   },
@@ -65,7 +89,12 @@
     "lang": "zh",
     "type": "cross_variant",
     "target_variant": null,
-    "expected_keywords": ["RTX 5090", "RTX 5070 Ti", "24GB", "12GB"],
+    "expected_keywords": [
+      "RTX 5090",
+      "RTX 5070 Ti",
+      "24GB",
+      "12GB"
+    ],
     "should_abstain": false,
     "notes": "跨 variant GPU 比較"
   },
@@ -75,7 +104,11 @@
     "lang": "en",
     "type": "cross_variant",
     "target_variant": null,
-    "expected_keywords": ["RTX 5090", "RTX 5080", "RTX 5070 Ti"],
+    "expected_keywords": [
+      "RTX 5090",
+      "RTX 5080",
+      "RTX 5070 Ti"
+    ],
     "should_abstain": false,
     "notes": "英文三 variant GPU 全比較"
   },
@@ -85,7 +118,11 @@
     "lang": "zh",
     "type": "abstain",
     "target_variant": null,
-    "expected_keywords": ["沒有找到", "官方規格", "Windows Hello"],
+    "expected_keywords": [
+      "沒有找到",
+      "官方規格",
+      "Windows Hello"
+    ],
     "should_abstain": true,
     "notes": "拒答測試：規格只有 Windows Hello Face，沒有指紋辨識"
   },
@@ -95,7 +132,11 @@
     "lang": "en",
     "type": "abstain",
     "target_variant": null,
-    "expected_keywords": ["not found", "no relevant", "Wi-Fi 7"],
+    "expected_keywords": [
+      "not found",
+      "no relevant",
+      "Wi-Fi 7"
+    ],
     "should_abstain": true,
     "notes": "拒答測試：規格是 Wi-Fi 7，沒有 Wi-Fi 8"
   },
@@ -105,7 +146,9 @@
     "lang": "zh",
     "type": "single_spec",
     "target_variant": "shared",
-    "expected_keywords": ["99Wh"],
+    "expected_keywords": [
+      "99Wh"
+    ],
     "should_abstain": false,
     "notes": "電池容量查詢"
   },
@@ -115,7 +158,10 @@
     "lang": "zh",
     "type": "single_spec",
     "target_variant": "shared",
-    "expected_keywords": ["USB3.2", "Type-A"],
+    "expected_keywords": [
+      "USB3.2",
+      "Type-A"
+    ],
     "should_abstain": false,
     "notes": "連接埠數量查詢"
   },
@@ -125,7 +171,9 @@
     "lang": "en",
     "type": "single_spec",
     "target_variant": "shared",
-    "expected_keywords": ["2.5 kg"],
+    "expected_keywords": [
+      "2.5 kg"
+    ],
     "should_abstain": false,
     "notes": "英文重量查詢"
   },
@@ -135,7 +183,11 @@
     "lang": "zh",
     "type": "single_spec",
     "target_variant": "shared",
-    "expected_keywords": ["Thunderbolt 4", "Thunderbolt 5", "Type-C"],
+    "expected_keywords": [
+      "Thunderbolt 4",
+      "Thunderbolt 5",
+      "Type-C"
+    ],
     "should_abstain": false,
     "notes": "Thunderbolt 版本查詢"
   },
@@ -145,7 +197,10 @@
     "lang": "zh",
     "type": "single_spec",
     "target_variant": "BYH",
-    "expected_keywords": ["175W", "RTX 5080"],
+    "expected_keywords": [
+      "175W",
+      "RTX 5080"
+    ],
     "should_abstain": false,
     "notes": "BYH GPU TGP 查詢"
   }

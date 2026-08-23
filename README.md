@@ -1,5 +1,7 @@
 # AORUS MASTER 16 AM6H 規格問答 RAG
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Zhanzii9624/4GB-VRAM-RAG/blob/main/scripts/colab.ipynb)
+
 [GIGABYTE AORUS MASTER 16 AM6H](https://www.gigabyte.com/tw/Laptop/AORUS-MASTER-16-AM6H/sp) 的規格問答系統，在 4GB VRAM 限制下用 Python 跑完整 RAG pipeline。支援繁中、英文、中英混合提問，有拒答機制。
 
 ---
@@ -53,7 +55,8 @@ uv run python main.py --query "BZH 的顯示晶片規格是什麼？"
 ### Benchmark
 
 ```bash
-uv run python scripts/eval_benchmark.py
+uv run python scripts/eval_benchmark.py            # 完整 pipeline：latency/TPS + LLM 回答
+uv run python scripts/eval_benchmark.py --ablation # 純 retrieval，比較三種 alpha 設定
 ```
 
 ---
@@ -92,6 +95,16 @@ keyword 用 jieba 斷詞（比純 bigram 對中文更準）。
 - 當query同時出現 2 個以上型號名稱（如「BZH、BYH、BXH 差在哪」），semantic score 天然偏向 shared chunks，會漏掉 GPU 差異。
 - 解決方式：偵測到比較查詢後，把所有 variant-specific chunks（非 shared）強制 pin 到 context 前排，再補其餘 top-k。
 
+**Retrieval ablation**（`evaluation/qa_testset.json` 11 題單一規格查詢，排除會被 pinning 覆蓋的 cross_variant 跟無正確 chunk 可比對的 abstain，TOP_K=3，指標為正確答案第一次被覆蓋完的排名）：
+
+| 設定 | hit@3 | avg_rank |
+|---|---|---|
+| vector-only (α=1.0) | 8/11 (73%) | 1.0 |
+| keyword-only (α=0.0) | 10/11 (91%) | 1.1 |
+| hybrid (α=0.6) | 10/11 (91%) | **1.0** |
+
+vector-only 漏掉的兩題（顯示器解析度 `2560x1600`、重量 `2.5 kg`）都是精確數字型 spec，純語意相似度本來就抓不準這種數字；keyword-only 命中率跟 hybrid 打平，但電池容量那題排名輸給 hybrid（keyword-only 排第 2，hybrid 排第 1）——代表 alpha=0.6 不是白加的，語意分數在部分題目確實把排名拉到更前面。三種設定都漏掉的那一題（CPU 型號）是測試資料的 keyword 打錯字，不是 retrieval 的問題（原文是 "Core Ultra 9 **Processor** 275HX"，測試題少打了 Processor）。
+
 ---
 
 ## 評測結果（15 題，Colab T4）
@@ -100,38 +113,39 @@ keyword 用 jieba 斷詞（比純 bigram 對中文更準）。
 
 | 指標 | 平均 | 範圍 |
 |------|------|------|
-| Embed latency | 37.9 ms | 26.6–48.7 ms |
-| Retrieval latency | 37.3 ms | 25.3–49.7 ms |
-| Prefill (TTFT) | 254.5 ms | 204.2–360.2 ms |
-| TPS | 63.5 | 57.7–67.7 |
+| Embed latency | 35.6 ms | 29.6–42.4 ms |
+| Retrieval latency | 34.8 ms | 28.4–40.1 ms |
+| Prefill (TTFT) | 248.6 ms | 181.4–303.4 ms |
+| TPS | 63.5 | 54.3–66.9 |
 
 | ID | 問題 | 類型 | 結果 |
 |----|------|------|------|
-| q1 | BZH 顯示晶片規格 | 中文單查 | ✅ RTX 5090, 24GB GDDR7, 175W |
-| q2 | BZH GPU (英文) | 英文單查 | ✅ RTX 5090 Laptop GPU |
-| q3 | BZH VRAM capacity | 中英混合 | ✅ 24GB GDDR7 |
-| q4 | 三型號最大功耗比較 | 跨型號 | ✅ BZH 175W 最高（BXH 140W） |
-| q5 | BYH vs BZH VRAM 差距 | 跨型號 | ✅ 16GB vs 24GB，差 8GB |
-| q6 | 螢幕支援觸控？ | 拒答 | ✅ 正確拒答 |
-| q7 | 今天天氣？ | 拒答 | ✅ 正確拒答 |
-| q8 | 保固期限？ | 拒答 | ✅ 正確拒答 |
-| q9 | 175W 對應哪些型號 | 精確數字 | ✅ BZH 和 BYH |
-| q10 | RAM 最大容量（英文） | 英文單查 | ✅ 64GB DDR5 5600MHz |
-| q11 | 電池容量 | 中文單查 | ✅ 99Wh |
-| q12 | Keyboard 有 RGB？ | 中英混合 | ✅ 3-zone RGB Backlit |
-| q13 | 連接埠右側規格 | 中英混合 | ✅ USB-A / TB4 / MicroSD / Audio |
-| q14 | BZH、BYH、BXH 差在哪 | 跨型號 | ✅ 正確列出三者 GPU 差異 |
-| q15 | BYH 是 RTX 5070 Ti + 16GB？ | 事實驗證 | ✅ 更正為 RTX 5080 + 16GB |
+| Q01 | CPU 型號 | 單一規格 | ✅ Core Ultra 9 Processor 275HX |
+| Q02 | BZH GPU 規格 | 單一規格 | ✅ RTX 5090, 24GB GDDR7, 175W |
+| Q03 | BXH GPU（英文） | 單一規格 | ✅ RTX 5070 Ti, 12GB GDDR7 |
+| Q04 | 記憶體上限 | 單一規格 | ✅ 64GB DDR5 5600MHz |
+| Q05 | 顯示器解析度/更新率（英文） | 單一規格 | ✅ 2560x1600, 240Hz |
+| Q06 | Wi-Fi 版本 | 單一規格 | ✅ WIFI 7 |
+| Q07 | BZH vs BXH GPU 差異 | 跨型號 | ✅ 正確列出兩者規格差異 |
+| Q08 | 三型號 GPU 全比較（英文） | 跨型號 | ⚠️ 規格數字正確，但排版把 BYH 誤植在 "RTX 5090" 標題底下（BYH 實際是 RTX 5080），格式易誤讀 |
+| Q09 | 支援指紋辨識？ | 拒答 | ❌ 答成「支援指紋辨識」，實際規格只有 Windows Hello 臉部辨識——拒答失敗，把相近功能當成答案 |
+| Q10 | 支援 Wi-Fi 8？（英文） | 拒答 | ✅ 正確拒答（規格是 Wi-Fi 7） |
+| Q11 | 電池容量 | 單一規格 | ✅ 99Wh |
+| Q12 | USB Type-A 埠數 | 單一規格 | ✅ 2 個 |
+| Q13 | 重量（英文） | 單一規格 | ✅ 約 2.5 kg |
+| Q14 | Thunderbolt 版本 | 單一規格 | ✅ Thunderbolt 4 / 5 |
+| Q15 | BYH GPU 功耗 | 單一規格 | ✅ 175W |
 
-正確率 **15/15**，拒答 **3/3**。
+正確率 **13/15**，拒答 **1/2**。
 
-q4/q5/q14 為跨型號比較題，靠 `_pinned_variant_chunks` 把三個 GPU chunk 釘入 context 才答對。舊版（純 semantic）q14 回答「三者之間沒有特別差異」。
+Q07/Q08 靠 `_pinned_variant_chunks` 把 GPU chunk 釘入 context 才答對。Q09 是目前唯一的真實失敗案例：retrieval 有抓到相關 chunk（Webcam/臉部辨識那筆），但 LLM 把「有提到生物辨識」直接當成「有指紋辨識」來回答，沒有意識到問題問的功能跟資料寫的功能不是同一個。已經在 `rag/prompt.py` 加一條規則明確要求「相近但不同的功能視同找不到」，下一輪 eval 要重新驗證這題有沒有修好。
 
 ---
 
 ## 已知限制
 
-- `alpha=0.6` 沒有系統性調參，是人工估的
+- `alpha=0.6` 沒有系統性調參，是人工估的；ablation 顯示 hybrid 至少不比單一策略差，但沒有掃過完整 alpha 範圍
+- 拒答機制在「問題功能跟資料相近但不同」時會失效（見 Q09），已加規則修正，尚待重新驗證
 - 資料只有這一個產品頁，21 筆規格、需要手動維護
 - `max_new_tokens=200` 在長答案可能截斷
 
@@ -149,10 +163,10 @@ rag/
   prompt.py            # ChatML 格式 Prompt 組裝與拒答機制系統提示
 inference/
   llama_engine.py      # llama-cpp-python 模型載入與 Streaming 推論引擎
+evaluation/
+  qa_testset.json      # 15 題測試題，含單一規格、跨型號比較與拒答測試
 scripts/
   download_model.py    # 自動從 HF 下載 GGUF 模型檔至 models/
-  eval_benchmark.py    # 測試script，latency/TPS與ablation測試
-  qa_testset.json      # 15 題測試題，含單一規格、跨型號比較與拒答測試
+  eval_benchmark.py    # 測試script，latency/TPS 完整 pipeline + retrieval-only ablation
   colab.ipynb          # Colab執行與測試
 ```
-
