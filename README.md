@@ -1,8 +1,13 @@
-# AORUS MASTER 16 AM6H 規格問答 RAG
+<div align="center">
 
+# AORUS MASTER 16 AM6H 規格問答 RAG
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/16hpYw6EYKeRxDs50lLdQRK_JEe4eNKtp?usp=sharing)
 
-[GIGABYTE AORUS MASTER 16 AM6H](https://www.gigabyte.com/tw/Laptop/AORUS-MASTER-16-AM6H/sp) 的規格問答系統，在 4GB VRAM 限制下用純 Python 跑完整 RAG pipeline（無 LangChain / LlamaIndex）。支援繁中、英文、中英混合提問，有拒答機制。
+</div>
+
+[GIGABYTE AORUS MASTER 16 AM6H](https://www.gigabyte.com/tw/Laptop/AORUS-MASTER-16-AM6H/sp) 的規格問答系統，於4GB VRAM限制下使用Python運行RAG pipeline (無 LangChain/LlamaIndex)
+
+支援繁中、英文、中英混合提問，有拒答機制。
 
 ---
 
