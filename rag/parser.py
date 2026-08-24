@@ -1,8 +1,8 @@
 """
 rag/parser.py
-定義 GIGABYTE AORUS MASTER 16 AM6H 規格資料，輸出成 specs.json
-資料為手動整理自官網(https://www.gigabyte.com/tw/Laptop/AORUS-MASTER-16-AM6H/sp)
-採手動維護並定期人工核對的方式確保準確性
+定義了GIGABYTE AORUS MASTER 16 AM6H 規格資料，最後存成結構化data/processed/specs.json
+資料是手動整理自官網(https://www.gigabyte.com/tw/Laptop/AORUS-MASTER-16-AM6H/sp)
+需採手動維護並定期人工核對的方式確保準確性
 
 schema:
 {
@@ -107,7 +107,7 @@ SPECS: dict[str, Any] = {
 
 
 def build_specs() -> dict[str, Any]:
-    """輸出 specs.json，並回傳 specs dict。"""
+    # 輸出 specs.json，並回傳 specs dict
     PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
     out_path = PROCESSED_DIR / "specs.json"
     out_path.write_text(json.dumps(SPECS, ensure_ascii=False, indent=2), encoding="utf-8")

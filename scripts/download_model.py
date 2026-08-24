@@ -1,6 +1,6 @@
 """
 scripts/download_model.py
-從 Hugging Face 下載 Qwen2.5-3B-Instruct-Q4_K_M.gguf 模型檔案至 models/ 目錄。
+從 Hugging Face 下載 Qwen2.5-3B-Instruct-Q4_K_M.gguf 模型檔案至models資料夾
 """
 
 from pathlib import Path

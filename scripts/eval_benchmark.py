@@ -16,14 +16,11 @@ from rag.prompt import build_prompt
 from inference.llama_engine import LlamaEngine
 
 N_RUNS = 3
-TOP_K = 6            # main()：完整 pipeline 生成回答用，21 筆資料量小，多帶一點 context 對跨 variant 比較很重要
-ABLATION_TOP_K = 3   # ablation()：只用於 alpha 比較，窗口收窄才能逼出三種策略的差異
+TOP_K = 6
+ABLATION_TOP_K = 3
 
 QA_TESTSET_PATH = Path(__file__).parent / "qa_testset.json"
 
-# ablation 只比較「單一規格查詢」的 retrieval 排名。
-# cross_variant 會被 hybrid_retriever 的 pinning 機制強制覆蓋 alpha，abstain 沒有正確 chunk 可比對排名，
-# 兩者都不適合拿來測 alpha 有沒有效，所以排除，但仍會印出排除清單，不是靜默跳過。
 ABLATION_EXCLUDED_TYPES = {"cross_variant", "abstain"}
 
 
@@ -117,8 +114,8 @@ def main():
 
 
 def _first_hit_rank(retrieved_texts: list[str], keywords: list[str]) -> int | None:
-    """依序看 top-k retrieved chunks，回傳所有 keyword 第一次被累積覆蓋完的名次（1-indexed）。
-    沒有任何名次能覆蓋完全部 keyword 就回傳 None（miss）。"""
+    # 依序看 top-k retrieved chunks，回傳所有 keyword 第一次被累積覆蓋完的名次（1-indexed）
+    # 沒有任何名次能覆蓋完全部 keyword 則回傳 None（miss）
     seen = ""
     for i, text in enumerate(retrieved_texts, start=1):
         seen += text.lower()
@@ -128,14 +125,8 @@ def _first_hit_rank(retrieved_texts: list[str], keywords: list[str]) -> int | No
 
 
 def ablation():
-    """
-    Retrieval-only ablation：不跑 LLM，只比較三種 alpha 設定下 hybrid retriever 的排名品質。
-
-    - TOP_K 收窄到 ABLATION_TOP_K=3（21 筆資料用 top_k=6 太寬鬆，三種策略幾乎都能命中，測不出差異）
-    - 排除 cross_variant / abstain 題型（見 ABLATION_EXCLUDED_TYPES 說明），只測單一規格查詢
-    - 指標改成 rank（正確答案第一次被覆蓋完的名次），而不是「top-k 裡有沒有出現過」的二元 hit，
-      這樣才看得出 vector-only / keyword-only / hybrid 排序品質的真實差距
-    """
+    # 比較三種 alpha 設定的 retrieval 排名，不跑 LLM
+    # TOP_K=3、排除 cross_variant/abstain、看 rank
     testset = _load_testset()
     graded = [q for q in testset if q["type"] not in ABLATION_EXCLUDED_TYPES]
     excluded = [q for q in testset if q["type"] in ABLATION_EXCLUDED_TYPES]

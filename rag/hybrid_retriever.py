@@ -1,8 +1,8 @@
 """
-Hybrid Retrieval: cosine similarity + jieba keyword overlap, min-max normalized and fused.
+Hybrid Retrieval: cosine similarity + jieba keyword overlap, min-max normalized and fused
 
-比較查詢（query 同時含2+個型號）時，把所有 variant-specific chunks 強制釘入 context 前排，
-避免 semantic score 偏向 shared chunks 而漏掉差異規格。
+比較查詢（query 同時含2+個型號）時，把所有 variant-specific chunks 強制釘選入context前排，
+避免 semantic score 偏向 shared chunks 而漏掉差異規格
 """
 import re
 import numpy as np
@@ -21,7 +21,7 @@ def _is_comparison_query(query: str) -> bool:
 
 
 def _tokenize(text: str) -> list[str]:
-    """jieba 斷詞 + 英數 regex，回傳 token list。"""
+    # jieba 斷詞 + 英數 regex，回傳 token list
     tokens = []
     for seg in jieba.cut(text.lower()):
         seg = seg.strip()
@@ -62,7 +62,7 @@ class HybridRetriever:
         ]
 
     def _pinned_variant_chunks(self, variants: set[str]) -> list[int]:
-        """找出 variant 在指定集合中、且非 shared 的所有 chunk index。"""
+        # 找出 variant 在指定集合中、且非 shared 的所有 chunk index
         return [
             i for i, chunk in enumerate(self.chunks)
             if _get_chunk_variant(chunk) in variants

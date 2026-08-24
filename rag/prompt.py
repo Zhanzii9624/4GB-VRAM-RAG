@@ -1,4 +1,4 @@
-"""手動組 system prompt + context + 問題，支援繁中/英文混合。"""
+"""system prompt + context + 問題，支援繁中/英文混合"""
 
 SYSTEM_PROMPT = """你是一個專業的筆電規格問答助手，只能根據提供的「參考資料」回答問題。
 筆電名稱: GIGABYTE AORUS MASTER 16 AM6H，且有三種細部規格型號。

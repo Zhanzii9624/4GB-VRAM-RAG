@@ -1,15 +1,15 @@
 """
 inference/llama_engine.py
-llama-cpp-python 推論引擎，支援 Streaming 輸出。
+llama-cpp-python 推論引擎，支援 Streaming 輸出
 
 模型：Qwen2.5-3B-Instruct Q4_K_M GGUF
   - 預估 VRAM：~2.3 GB（model weights）+ KV cache（n_ctx=2048 下約 0.3~0.5 GB）
   - 實測 VRAM 請見 README 評測結果
 
-4GB VRAM 策略：
+有限資源4GB VRAM下策略：
   - n_gpu_layers=-1（嘗試全部 offload）
   - n_ctx=2048（夠用於規格問答，不浪費 KV cache）
-  - 若 VRAM 不足，逐步降低 n_gpu_layers（e.g. 28 → 20 → 0）
+  - 若 VRAM 不足，逐步降低 n_gpu_layers（eg. 28 → 20 → 0）
 """
 
 from __future__ import annotations
@@ -18,7 +18,7 @@ import time
 from pathlib import Path
 from typing import Generator, Iterator
 
-# 預設模型路徑（下載後放這裡）
+# 預設模型路徑
 DEFAULT_MODEL_PATH = Path(__file__).parent.parent / "models" / "Qwen2.5-3B-Instruct-Q4_K_M.gguf"
 
 
@@ -52,8 +52,7 @@ class LlamaEngine:
         self._n_ctx = n_ctx
         print("[llama_engine] Model ready.")
 
-    # ── Streaming generation ───────────────────────────────────────────────────
-
+    # Streaming generation
     def stream(
         self,
         prompt: str,
@@ -63,10 +62,8 @@ class LlamaEngine:
         repeat_penalty: float = 1.1,
         stop: list[str] | None = None,
     ) -> Generator[str, None, None]:
-        """
-        逐 token yield 生成文字（streaming）。
-        呼叫方可直接 for token in engine.stream(prompt): print(token, end='', flush=True)
-        """
+        # 逐 token yield 生成文字
+        # 呼叫方可 for token in engine.stream(prompt): print(token, end='', flush=True)
         if stop is None:
             stop = ["<|im_end|>", "<|endoftext|>"]
 
@@ -84,7 +81,7 @@ class LlamaEngine:
             if token_text:
                 yield token_text
 
-    # ── Non-streaming (for evaluation) ────────────────────────────────────────
+    # Non-streaming 評估用到
 
     def generate(
         self,
@@ -96,7 +93,7 @@ class LlamaEngine:
         stop: list[str] | None = None,
     ) -> dict:
         """
-        非串流模式，回傳包含 timing 資訊的 dict：
+        非串流模式，回傳含timing的 dict：
         {
           "text": str,
           "ttft_s": float,          # Time To First Token (秒)
@@ -134,10 +131,8 @@ class LlamaEngine:
         }
 
     def get_vram_usage_mb(self) -> float | None:
-        """
-        嘗試讀取目前 GPU VRAM 使用量（MB）。
-        需要 pynvml 或 torch；找不到則回傳 None。
-        """
+        
+        # 目前 GPU VRAM 使用量(MB)
         try:
             import pynvml
             pynvml.nvmlInit()
@@ -154,14 +149,11 @@ class LlamaEngine:
             pass
         return None
 
-
-# ── Entry point ────────────────────────────────────────────────────────────────
-
 if __name__ == "__main__":
     engine = LlamaEngine()
     test_prompt = (
-        "<|im_start|>system\n你是一個助理。\n<|im_end|>\n"
-        "<|im_start|>user\n請用一句話介紹 AORUS MASTER 16。\n<|im_end|>\n"
+        "<|im_start|>system\n你是一個AI規格介紹助理。\n<|im_end|>\n"
+        "<|im_start|>user\n請用一句話介紹AORUS MASTER 16 AM6H。\n<|im_end|>\n"
         "<|im_start|>assistant\n"
     )
     print("[test] Streaming output:")

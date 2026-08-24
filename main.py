@@ -1,11 +1,11 @@
 """
 main.py
-RAG 系統 CLI 入口。支援單次查詢、互動問答與 --ablation 檢索測試。
+RAG系統 CLI，可以單次查詢、互動問答與 --ablation 檢索測試。
 
 用法：
   uv run python main.py --query "BZH 的 GPU 規格是什麼？"
   uv run python main.py --ablation
-  uv run python main.py (進入互動問答)
+  uv run python main.py (互動問答)
 """
 
 from __future__ import annotations
@@ -25,7 +25,7 @@ from inference.llama_engine import LlamaEngine
 
 
 def build_pipeline(model_path: str | Path | None = None):
-    """建立包含 Chunks, Embeddings, HybridRetriever 與 LlamaEngine 的完整 RAG Pipeline。"""
+    # 建立含 Chunks, Embeddings, HybridRetriever 與 LlamaEngine 的 RAG Pipeline
     # 1. Chunks
     chunks_path = ROOT / "data" / "processed" / "chunks.json"
     if chunks_path.exists():
@@ -56,7 +56,7 @@ def build_pipeline(model_path: str | Path | None = None):
 
 
 def ask(query: str, retriever, engine, top_k: int = 6) -> None:
-    """執行檢索並以 Streaming 方式輸出 LLM 回答。"""
+    # 檢索並用 Streaming 方式輸出 LLM 回答
     print(f"\n{'='*60}")
     print(f"問：{query}")
     print(f"{'─'*60}")
@@ -73,7 +73,7 @@ def ask(query: str, retriever, engine, top_k: int = 6) -> None:
 
 
 def interactive_loop(retriever, engine):
-    print("\n🔍 AORUS MASTER 16 AM6H 規格問答系統 (Streaming)")
+    print("\n AORUS MASTER 16 AM6H 規格問答系統")
     print("   輸入問題，按 Enter 查詢；輸入 'q' 或 'quit' 結束\n")
     while True:
         try:
@@ -90,6 +90,7 @@ def interactive_loop(retriever, engine):
 
 
 def main():
+    # Command-line Argument Parser
     parser = argparse.ArgumentParser(description="AORUS RAG QA System")
     parser.add_argument("--query", type=str, default=None, help="單次查詢")
     parser.add_argument("--model", type=str, default=None, help="GGUF 模型路徑")

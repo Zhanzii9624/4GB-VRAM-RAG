@@ -1,17 +1,15 @@
 """
 rag/chunker.py
-將 specs.json 的每筆 record 轉為可檢索的自然語言 chunk。
+讀取specs.json，轉為具備上下文之自然語言文本片段(Chunk)、存為chunks.json
+每筆規格皆套用固定模板
+eg:BZH顯示卡規格chunk如下:
 
-Chunk 格式（固定模板，方便除錯與重現）：
-────────────────────────────────────────────
 [類別: 顯示晶片] [Variant: BZH]
 顯示晶片 (GPU / Graphics): NVIDIA GeForce RTX 5090 Laptop GPU, 24GB GDDR7, 175W TGP
 產品型號 BZH 專屬規格。
-────────────────────────────────────────────
 
-shared variant 額外標註：
-  「本規格適用於全部型號 (BZH / BYH / BXH)。」
-以確保查「BXH 的記憶體」時也能命中 shared chunk。
+shared variant：
+全部型號BZH/BYH/BXH享有這些共同規格，確保查"BXH的記憶體規格"時也能命中
 """
 
 from __future__ import annotations
@@ -30,17 +28,15 @@ ALL_VARIANTS = ("BZH", "BYH", "BXH")
 @dataclass
 class Chunk:
     text: str                   # 送進 embedding / retriever 的文字
-    metadata: dict[str, Any]    # category, variant, key, source_url, ...
+    metadata: dict[str, Any]    # category, variant, key, source_url...
 
     def to_dict(self) -> dict:
         return {"text": self.text, "metadata": self.metadata}
 
 
 def _build_chunk_text(record: dict) -> str:
-    """
-    將一筆 record 轉為自然語言文字。
-    同時包含繁中 key 與英文 key_en，增強跨語系 retrieval。
-    """
+    # 將一筆 record 轉為自然語言文字
+    # 包含繁中 key 與英文 key_en，增強跨語系 retrieval
     variant = record["variant"]
     category = record["category"]
     key = record["key"]
@@ -75,9 +71,7 @@ def _build_chunk_text(record: dict) -> str:
 
 
 def build_chunks(specs: dict[str, Any] | None = None) -> list[Chunk]:
-    """
-    從 specs dict（或從磁碟讀 specs.json）建立 chunk list。
-    """
+    # 從 specs dict 或 specs.json 建立 chunk list
     if specs is None:
         if not SPECS_PATH.exists():
             raise FileNotFoundError(f"specs.json not found: {SPECS_PATH}. Run parser.py first.")
@@ -87,8 +81,6 @@ def build_chunks(specs: dict[str, Any] | None = None) -> list[Chunk]:
     source_url = specs.get("source_url", "")
     product_family = specs.get("product_family", "")
     chunks: list[Chunk] = []
-
-    # 去重 guard（parser 已去重，這裡雙保險）
     seen: set[str] = set()
 
     for record in records:
@@ -115,7 +107,7 @@ def build_chunks(specs: dict[str, Any] | None = None) -> list[Chunk]:
 
 
 def save_chunks(chunks: list[Chunk], path: Path | None = None) -> Path:
-    """將 chunks 存成 JSON，方便 debug。"""
+    # 將chunks存成JSON
     if path is None:
         path = PROCESSED_DIR / "chunks.json"
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -126,7 +118,7 @@ def save_chunks(chunks: list[Chunk], path: Path | None = None) -> Path:
 
 
 def load_chunks(path: Path | None = None) -> list[Chunk]:
-    """從磁碟載入 chunks。"""
+    # 載入 chunks
     if path is None:
         path = PROCESSED_DIR / "chunks.json"
     data = json.loads(path.read_text(encoding="utf-8"))
