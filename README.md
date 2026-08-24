@@ -71,6 +71,7 @@ parser.py → chunker.py → embedding.py → hybrid_retriever.py → prompt.py 
 | Retrieval latency | 34.8 ms | 28.4–40.1 ms |
 | Prefill (TTFT) | 248.6 ms | 181.4–303.4 ms |
 | TPS | 63.5 | 54.3–66.9 |
+
 15題 × 3次平均，Colab T4
 
 **Retrieval ablation**
@@ -80,8 +81,8 @@ parser.py → chunker.py → embedding.py → hybrid_retriever.py → prompt.py 
 | vector-only | 8/11 (73%) | 1.0 |
 | keyword-only | 10/11 (91%) | 1.1 |
 | hybrid (α=0.6) | 10/11 (91%) | 1.0|
-排除 cross_variant/abstain 後的 11 題單一規格查詢，TOP_K=3
 
+排除 cross_variant/abstain 後的 11 題單一規格查詢，TOP_K=3
 1. vector-only 無法透過語意相似度抓到精確數字
 2. 此情況hybrid與 keyword-only 命中率相同
 
